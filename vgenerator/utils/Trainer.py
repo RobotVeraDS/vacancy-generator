@@ -23,7 +23,7 @@ class Trainer(object):
         loss = Variable(torch.FloatTensor()).to(device)
 
         for ind_epoch in range(num_epochs):
-
+            epoch_start = datetime.datetime.now()
             epoch_losses = []
             for ind_batch in range(batches_per_epoch):
                 batch = data_loader.get_random_train_batch(batch_size)
@@ -46,7 +46,16 @@ class Trainer(object):
                 self.save_checkpoint(ind_epoch, model, optimizer)
 
             if ind_epoch % print_every == 0:
-                print("Epoch", ind_epoch + 1, "loss:", np.mean(epoch_losses))
+                epoch_seconds = round((
+                    datetime.datetime.now() - epoch_start
+                ).total_seconds(), 2)
+
+                print(
+                    "Epoch", ind_epoch + 1,
+                    "seconds:", epoch_seconds,
+                     "loss:", np.mean(epoch_losses)
+                )
+
                 for seed in seeds:
                     out = self.generate_sample(
                         model, data_loader, seed, test_max_len, test_temperature
