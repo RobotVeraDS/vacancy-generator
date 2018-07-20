@@ -4,6 +4,8 @@ import torch
 import datetime
 import re
 
+from torch.autograd import Variable
+
 
 class Trainer(object):
     def __init__(self):
@@ -11,7 +13,7 @@ class Trainer(object):
 
 
     def train(self, model, optimizer, data_loader, batch_size, num_epochs,
-              batches_per_epoch, save_every, print_every):
+              batches_per_epoch, save_every, print_every, seeds):
         num_tokens = data_loader.get_vocab_size()
 
         for ind_epoch in range(num_epochs):
@@ -38,6 +40,13 @@ class Trainer(object):
 
             if ind_epoch % print_every == 0:
                 print("Epoch", ind_epoch, "loss:", np.mean(epoch_losses))
+                for seed in seeds:
+                    out = self.generate_sample(
+                        model, data_loader, seed, 20, 0.5
+                    )
+                    print(re.sub("_PAD_", "", out).strip())
+
+                print()
 
 
     def save_checkpoint(self, ind_epoch, model, optimizer):
@@ -55,3 +64,19 @@ class Trainer(object):
             },
             "checkpoints/{}.pth.tar".format(file_pattern)
         )
+
+
+    def generate_sample(self, model, data_loader, seed, max_length, temperature):
+        mtx = data_loader.datas_to_matrix([seed])
+        x = Variable(torch.LongTensor(mtx))
+
+        for _ in range(max_length - len(seed)):
+            probas = model(x)[:,-1]
+            p_next = F.softmax(probas / temperature, dim=-1).data.numpy()[0]
+
+            next_ind = np.random.choice(data_loader.get_vocab_size(), p=p_next)
+            next_ind = Variable(torch.LongTensor([[next_ind]]))
+
+            x = torch.cat([x, next_ind], dim=1)
+
+        return " ".join([data_loader.tokens[ix] for ix in x.data.numpy()[0]])
