@@ -18,13 +18,16 @@ model = Generator(
 )
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
-print(optimizer)
 
 batch_size = 10
 batches_per_epoch = 5
-num_epochs = 5
+num_epochs = 100
+
+save_every = 10
+print_every = 2
 
 trainer = Trainer()
 
 trainer.train(model, optimizer, data_loader,
-              batch_size, num_epochs, batches_per_epoch)
+              batch_size, num_epochs, batches_per_epoch,
+              save_every, print_every)
