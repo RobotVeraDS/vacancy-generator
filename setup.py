@@ -23,8 +23,8 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
 
-    keywords='seq2seq vacancy nlp',
+    keywords='vacancy nlp rnn lstm generation',
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
 
-    install_requires=['torch', 'numpy'],
+    install_requires=['torch', 'numpy', 'tqdm'],
 )

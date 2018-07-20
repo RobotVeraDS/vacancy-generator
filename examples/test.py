@@ -8,18 +8,18 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # params
 
-embedding_size = 100
-hidden_size = 100
+embedding_size = 300
+hidden_size = 128
 num_layers = 2
 
 lr = 0.01
 
-batch_size = 10
-batches_per_epoch = 5
-num_epochs = 100
+batch_size = 32
+batches_per_epoch = 100
+num_epochs = 10
 
-save_every = 10
-print_every = 2
+save_every = 5
+print_every = 1
 
 seeds = [x.split() for x in [
     "менеджер по туризму",
@@ -40,6 +40,8 @@ seeds = [x.split() for x in [
 
 data_loader = DataLoader("data/sample")
 
+print("Number of unique tokens:", data_loader.get_vocab_size())
+
 model = Generator(
     data_loader.get_vocab_size(),
     embedding_size,
@@ -50,6 +52,8 @@ model = Generator(
 optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
 trainer = Trainer()
+
+print("Start training")
 
 trainer.train(model, optimizer, data_loader,
               batch_size, num_epochs, batches_per_epoch,

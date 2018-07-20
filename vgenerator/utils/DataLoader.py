@@ -6,12 +6,14 @@ import random
 import torch
 from torch.autograd import Variable
 
+import tqdm
+
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
 class DataLoader(object):
-    MIN_COUNT_TO_CONSIDER = 3
+    MIN_COUNT_TO_CONSIDER = 12
 
     def __init__(self, path):
         self.path = path
@@ -29,7 +31,8 @@ class DataLoader(object):
         tokens_count = defaultdict(int)
 
         with open("{}/train/data.txt".format(self.path), "r") as file:
-            for line in file:
+            print("Train data loading...")
+            for line in tqdm.tqdm(file):
                 tokens = line.split()
                 self.datas_train.append(tokens)
 
@@ -37,7 +40,8 @@ class DataLoader(object):
                     tokens_count[token] += 1
 
 
-        for token in tokens_count:
+        print("Tokens calculation...")
+        for token in tqdm.tqdm(tokens_count):
             if tokens_count[token] >= self.MIN_COUNT_TO_CONSIDER:
                 self.tokens.append(token)
 
