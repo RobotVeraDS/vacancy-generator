@@ -42,7 +42,7 @@ class DataLoader(object):
 
         print("Tokens calculation...")
         for token in tqdm.tqdm(tokens_count):
-            if tokens_count[token] >= self.MIN_COUNT_TO_CONSIDER:
+            if tokens_count[token] >= DataLoader.MIN_COUNT_TO_CONSIDER:
                 self.tokens.append(token)
 
         self.tokens += ["_PAD_", "_EOS_", "_UNK_"]

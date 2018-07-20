@@ -16,7 +16,8 @@ class Trainer(object):
 
 
     def train(self, model, optimizer, data_loader, batch_size, num_epochs,
-              batches_per_epoch, save_every, print_every, seeds):
+              batches_per_epoch, save_every, print_every, seeds,
+              test_max_len=50, test_temperature=1.0):
         num_tokens = data_loader.get_vocab_size()
 
         loss = Variable(torch.FloatTensor()).to(device)
@@ -48,7 +49,7 @@ class Trainer(object):
                 print("Epoch", ind_epoch + 1, "loss:", np.mean(epoch_losses))
                 for seed in seeds:
                     out = self.generate_sample(
-                        model, data_loader, seed, 100, 0.5
+                        model, data_loader, seed, test_max_len, test_temperature
                     )
                     print(re.sub("_PAD_", "", out).strip())
 
