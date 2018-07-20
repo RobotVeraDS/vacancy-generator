@@ -78,11 +78,11 @@ class Trainer(object):
 
         for _ in range(max_length - len(seed)):
             probas = model(x)[:,-1]
-            p_next = F.softmax(probas / temperature, dim=-1).data.numpy()[0]
+            p_next = F.softmax(probas / temperature, dim=-1).cpu().data.numpy()[0]
 
             next_ind = np.random.choice(data_loader.get_vocab_size(), p=p_next)
             next_ind = Variable(torch.LongTensor([[next_ind]])).to(device)
 
             x = torch.cat([x, next_ind], dim=1)
 
-        return " ".join([data_loader.tokens[ix] for ix in x.data.numpy()[0]])
+        return " ".join([data_loader.tokens[ix] for ix in x.cpu().data.numpy()[0]])
