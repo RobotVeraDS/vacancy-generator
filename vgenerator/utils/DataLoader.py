@@ -7,6 +7,9 @@ import torch
 from torch.autograd import Variable
 
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+
 class DataLoader(object):
     MIN_COUNT_TO_CONSIDER = 3
 
@@ -72,7 +75,7 @@ class DataLoader(object):
 
         return Variable(torch.LongTensor(self.datas_to_matrix(
             self.datas_train[start_index:(start_index + batch_size)]
-        )))
+        ))).to(device)
 
 
     def get_vocab_size(self):

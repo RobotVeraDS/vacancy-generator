@@ -4,6 +4,8 @@ from vgenerator.utils import Trainer
 
 import torch
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
 # params
 
 embedding_size = 100
@@ -43,7 +45,7 @@ model = Generator(
     embedding_size,
     hidden_size,
     num_layers
-)
+).to(device)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 

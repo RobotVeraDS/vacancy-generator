@@ -1,10 +1,13 @@
 import torch.nn.functional as F
 import numpy as np
-import torch
 import datetime
 import re
 
+import torch
 from torch.autograd import Variable
+
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
 class Trainer(object):
@@ -15,6 +18,8 @@ class Trainer(object):
     def train(self, model, optimizer, data_loader, batch_size, num_epochs,
               batches_per_epoch, save_every, print_every, seeds):
         num_tokens = data_loader.get_vocab_size()
+
+        loss = Variable(torch.FloatTensor()).to(device)
 
         for ind_epoch in range(num_epochs):
 
@@ -29,6 +34,7 @@ class Trainer(object):
                     probas[:, :-1].contiguous().view(-1, num_tokens),
                     batch[:, 1:].contiguous().view(-1)
                 )
+
 
                 epoch_losses.append(loss.item())
 
@@ -68,14 +74,14 @@ class Trainer(object):
 
     def generate_sample(self, model, data_loader, seed, max_length, temperature):
         mtx = data_loader.datas_to_matrix([seed])
-        x = Variable(torch.LongTensor(mtx))
+        x = Variable(torch.LongTensor(mtx)).to(device)
 
         for _ in range(max_length - len(seed)):
             probas = model(x)[:,-1]
             p_next = F.softmax(probas / temperature, dim=-1).data.numpy()[0]
 
             next_ind = np.random.choice(data_loader.get_vocab_size(), p=p_next)
-            next_ind = Variable(torch.LongTensor([[next_ind]]))
+            next_ind = Variable(torch.LongTensor([[next_ind]])).to(device)
 
             x = torch.cat([x, next_ind], dim=1)
 
