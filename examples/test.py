@@ -1,9 +1,30 @@
 from vgenerator.models import Generator
 from vgenerator.utils import DataLoader
+from vgenerator.utils import Trainer
 
-model = Generator(10, 10, 10, 2)
+import torch
 
 data_loader = DataLoader("data/sample")
 
-tokens = data_loader.get_vocab()
-print(tokens[:10])
+embedding_size = 100
+hidden_size = 100
+num_layers = 2
+
+model = Generator(
+    data_loader.get_vocab_size(),
+    embedding_size,
+    hidden_size,
+    num_layers
+)
+
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+print(optimizer)
+
+batch_size = 10
+batches_per_epoch = 5
+num_epochs = 5
+
+trainer = Trainer()
+
+trainer.train(model, optimizer, data_loader,
+              batch_size, num_epochs, batches_per_epoch)
