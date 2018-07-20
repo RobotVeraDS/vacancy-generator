@@ -8,7 +8,6 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-
     name='vgenerator',
     version='0.0.1',
     description='Vacancy generator',

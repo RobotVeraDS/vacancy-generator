@@ -42,7 +42,7 @@ class Trainer(object):
                 print("Epoch", ind_epoch, "loss:", np.mean(epoch_losses))
                 for seed in seeds:
                     out = self.generate_sample(
-                        model, data_loader, seed, 20, 0.5
+                        model, data_loader, seed, 100, 0.5
                     )
                     print(re.sub("_PAD_", "", out).strip())
 
