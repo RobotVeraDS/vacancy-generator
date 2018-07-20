@@ -10,9 +10,9 @@ class Generator(nn.Module):
         self.embedding = nn.Embedding(num_tokens, emb_size)
 
         self.rnn = nn.LSTM(
-            emb_size,
-            hidden_size,
-            num_layers
+            input_size=emb_size,
+            hidden_size=hidden_size,
+            num_layers=num_layers
         )
 
         self.out = nn.Linear(hidden_size, num_tokens)

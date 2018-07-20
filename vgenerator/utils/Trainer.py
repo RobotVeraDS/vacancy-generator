@@ -7,7 +7,7 @@ import torch
 from torch.autograd import Variable
 
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
 
 
 class Trainer(object):
@@ -19,8 +19,6 @@ class Trainer(object):
               batches_per_epoch, save_every, print_every, seeds,
               test_max_len=50, test_temperature=1.0):
         num_tokens = data_loader.get_vocab_size()
-
-        loss = Variable(torch.FloatTensor()).to(device)
 
         for ind_epoch in range(num_epochs):
             epoch_start = datetime.datetime.now()
@@ -35,7 +33,6 @@ class Trainer(object):
                     probas[:, :-1].contiguous().view(-1, num_tokens),
                     batch[:, 1:].contiguous().view(-1)
                 )
-
 
                 epoch_losses.append(loss.item())
 

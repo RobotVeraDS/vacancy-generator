@@ -9,7 +9,7 @@ from torch.autograd import Variable
 import tqdm
 
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
 
 
 class DataLoader(object):
@@ -38,6 +38,8 @@ class DataLoader(object):
 
                 for token in tokens:
                     tokens_count[token] += 1
+
+        np.random.shuffle(self.datas_train)
 
 
         print("Tokens calculation...")
