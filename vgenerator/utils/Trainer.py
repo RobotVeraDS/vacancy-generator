@@ -40,7 +40,7 @@ class Trainer(object):
                 optimizer.step()
 
             if ind_epoch % save_every == 0:
-                self.save_checkpoint(ind_epoch, model, optimizer)
+                self.save_checkpoint(ind_epoch, data_loader, model, optimizer)
 
             if ind_epoch % print_every == 0:
                 epoch_seconds = round((
@@ -63,7 +63,7 @@ class Trainer(object):
                 print()
 
 
-    def save_checkpoint(self, ind_epoch, model, optimizer):
+    def save_checkpoint(self, ind_epoch, data_loader, model, optimizer):
         file_pattern = re.sub(
             "[ \\-\\:]",
             "_",
@@ -74,7 +74,8 @@ class Trainer(object):
             {
                 "epoch": ind_epoch + 1,
                 "state_dict": model.state_dict(),
-                "optimizer" : optimizer.state_dict()
+                "optimizer" : optimizer.state_dict(),
+		"tokens": data_loader.tokens
             },
             "checkpoints/{}.pth.tar".format(file_pattern)
         )
