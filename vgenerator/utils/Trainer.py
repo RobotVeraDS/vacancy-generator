@@ -16,7 +16,7 @@ class Trainer(object):
 
 
     def train(self, model, optimizer, data_loader, batch_size, num_epochs,
-              batches_per_epoch, save_every, print_every, seeds,
+              batches_per_epoch, save_every, print_every, check_every, seeds,
               test_max_len=50, test_temperature=1.0):
         num_tokens = data_loader.get_vocab_size()
 
@@ -53,6 +53,7 @@ class Trainer(object):
                      "loss:", np.mean(epoch_losses)
                 )
 
+            if ind_epoch % check_every == 0:
                 for seed in seeds:
                     out = self.generate_sample(
                         model, data_loader, seed, test_max_len, test_temperature

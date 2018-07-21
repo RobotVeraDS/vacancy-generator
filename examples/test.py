@@ -4,7 +4,7 @@ from vgenerator.utils import Trainer
 
 import torch
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
 
 # params
 
@@ -20,6 +20,7 @@ num_epochs = 10
 
 save_every = 5
 print_every = 1
+check_every = 1
 
 seeds = [x.split() for x in [
     "менеджер по туризму",
@@ -57,4 +58,5 @@ print("Start training")
 
 trainer.train(model, optimizer, data_loader,
               batch_size, num_epochs, batches_per_epoch,
-              save_every, print_every, seeds)
+              save_every, print_every, check_every,
+              seeds)
