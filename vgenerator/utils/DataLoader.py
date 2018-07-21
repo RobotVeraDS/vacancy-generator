@@ -15,19 +15,26 @@ device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
 class DataLoader(object):
     MIN_COUNT_TO_CONSIDER = 12
 
-    def __init__(self, path):
+    def __init__(self, path, tokens=None):
         self.path = path
 
         self.datas_train = []
         self.datas_test = []
 
-        self.tokens = []
-        self.token_to_id = dict()
+        if tokens is None:
+            self._load_train_vocab()
+        else:
+            self.tokens = tokens
 
-        self._load_train_vocab()
+        self.token_to_id = dict(zip(
+            self.tokens,
+            range(len(self.tokens))
+        ))
 
 
     def _load_train_vocab(self):
+        self.tokens = []
+
         tokens_count = defaultdict(int)
 
         with open("{}/train/data.txt".format(self.path), "r") as file:
@@ -41,17 +48,12 @@ class DataLoader(object):
 
         np.random.shuffle(self.datas_train)
 
-
         print("Tokens calculation...")
         for token in tqdm.tqdm(tokens_count):
             if tokens_count[token] >= DataLoader.MIN_COUNT_TO_CONSIDER:
                 self.tokens.append(token)
 
         self.tokens += ["_PAD_", "_EOS_", "_UNK_"]
-        self.token_to_id = dict(zip(
-            self.tokens,
-            range(len(self.tokens))
-        ))
 
 
     def _get_token_id(self, token):
