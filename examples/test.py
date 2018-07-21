@@ -8,14 +8,14 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # params
 
-embedding_size = 300
-hidden_size = 128
-num_layers = 2
+embedding_size = 24
+hidden_size = 24
+num_layers = 1
 
 lr = 0.01
 
-batch_size = 32
-batches_per_epoch = 100
+batch_size = 10
+batches_per_epoch = 10
 num_epochs = 10
 
 save_every = 5
