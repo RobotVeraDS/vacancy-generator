@@ -12,7 +12,8 @@ class Generator(nn.Module):
         self.rnn = nn.LSTM(
             input_size=emb_size,
             hidden_size=hidden_size,
-            num_layers=num_layers
+            num_layers=num_layers,
+            batch_first=True
         )
 
         self.out = nn.Linear(hidden_size, num_tokens)
