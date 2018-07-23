@@ -20,7 +20,7 @@ class Generator(nn.Module):
 
 
     def forward(self, input, hidden=None):
-        output, hiiden = self.rnn(self.embedding(input), hidden)
+        output, hidden = self.rnn(self.embedding(input), hidden)
         output = self.out(output)
 
         return F.log_softmax(output, dim=-1), hidden
