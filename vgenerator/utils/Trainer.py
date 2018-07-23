@@ -27,7 +27,7 @@ class Trainer(object):
                 batch = data_loader.get_random_train_batch(batch_size)
 
                 model.zero_grad()
-                probas = model(batch)
+                probas, _ = model(batch)
 
                 loss = F.nll_loss(
                     probas[:, :-1].contiguous().view(-1, num_tokens),
@@ -83,11 +83,18 @@ class Trainer(object):
 
     def generate_sample(self, model, data_loader, seed, max_length, temperature):
         mtx = data_loader.datas_to_matrix([seed])
-        x = Variable(torch.LongTensor(mtx)).to(device)
+        x, hidden = Variable(torch.LongTensor(mtx)).to(device), None
+
+        # path through model all data except last word
+        if len(x[0]) > 1:
+            _, hidden = model(x[:,:-1], hidden)
 
         for _ in range(max_length - len(seed)):
-            probas = model(x)[:,-1]
-            p_next = F.softmax(probas / temperature, dim=-1).cpu().data.numpy()[0]
+            # add last word and calc next state
+            probas, hidden = model(x[:,-1:], hidden)
+
+            last_probas = probas[:, -1]
+            p_next = F.softmax(last_probas / temperature, dim=-1).cpu().data.numpy()[0]
 
             next_ind = np.random.choice(data_loader.get_vocab_size(), p=p_next)
             next_ind = Variable(torch.LongTensor([[next_ind]])).to(device)

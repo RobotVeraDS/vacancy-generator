@@ -19,8 +19,8 @@ class Generator(nn.Module):
         self.out = nn.Linear(hidden_size, num_tokens)
 
 
-    def forward(self, input):
-        output, _ = self.rnn(self.embedding(input))
+    def forward(self, input, hidden=None):
+        output, hiiden = self.rnn(self.embedding(input), hidden)
         output = self.out(output)
 
-        return F.log_softmax(output, dim=-1)
+        return F.log_softmax(output, dim=-1), hidden
