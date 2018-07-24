@@ -51,9 +51,10 @@ class Trainer(object):
                 ).total_seconds(), 2)
 
                 print(
-                    "Epoch", ind_epoch + 1,
+                    "Epoch:", ind_epoch + 1,
+                    "lr: %.2E" % optimizer.get_lr(),
                     "seconds:", epoch_seconds,
-                     "loss:", epoch_loss
+                    "loss:", epoch_loss
                 )
 
             if ind_epoch % check_every == 0:

@@ -5,10 +5,8 @@ class Optimizer(object):
         self.optim = optim
         self.scheduler = scheduler
 
-
     def step(self):
         self.optim.step()
-
 
     def update(self, loss):
         if self.scheduler is None:
@@ -19,3 +17,10 @@ class Optimizer(object):
             self.scheduler.step(loss)
         else:
             self.scheduler.step()
+
+    def get_lr(self):
+        #TODO(dima): is it elegant way?
+        for param_group in self.optim.param_groups:
+            return param_group['lr']
+
+        return None

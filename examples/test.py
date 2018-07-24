@@ -19,11 +19,11 @@ lr = 0.01
 
 batch_size = 10
 batches_per_epoch = 10
-num_epochs = 10
+num_epochs = 100
 
-save_every = 5
+save_every = 20
 print_every = 1
-check_every = 1
+check_every = 20
 
 seeds = [x.split() for x in [
     "Менеджер по туризму",
@@ -58,7 +58,7 @@ scheduler = ReduceLROnPlateau(
     optim,
     mode="min",
     factor=0.1,
-    patience=10
+    patience=2
 )
 
 optimizer = Optimizer(optim, scheduler)
