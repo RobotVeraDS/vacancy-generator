@@ -14,6 +14,23 @@ class Trainer(object):
     def __init__(self):
         pass
 
+
+    def calc_validation_loss(self, model, data_loader, batch_size):
+        batches = data_loader.get_validation_batch_iterator(batch_size)
+        num_tokens = data_loader.get_vocab_size()
+
+        losses = []
+        for batch in batches:
+            probas, _ = model(batch)
+
+            losses.append(F.nll_loss(
+                probas[:, :-1].contiguous().view(-1, num_tokens),
+                batch[:, 1:].contiguous().view(-1)
+            ).item())
+
+        return np.mean(losses)
+
+
     def train(self, model, optimizer, data_loader, batch_size, num_epochs,
               batches_per_epoch, save_every, print_every, check_every, seeds,
               test_max_len=50, test_temperature=1.0):
@@ -40,7 +57,9 @@ class Trainer(object):
                 optimizer.step()
 
             epoch_loss = np.mean(epoch_losses)
-            optimizer.update(epoch_loss)
+            validation_loss = self.calc_validation_loss(model, data_loader,
+                                                        batch_size)
+            optimizer.update(validation_loss)
 
             if ind_epoch % save_every == 0:
                 self.save_checkpoint(ind_epoch, data_loader, model, optimizer)
@@ -54,7 +73,8 @@ class Trainer(object):
                     "Epoch:", ind_epoch + 1,
                     "lr: %.2E" % optimizer.get_lr(),
                     "seconds:", epoch_seconds,
-                    "loss:", epoch_loss
+                    "train loss:", epoch_loss,
+                    "valid lsos:", validation_loss
                 )
 
             if ind_epoch % check_every == 0:

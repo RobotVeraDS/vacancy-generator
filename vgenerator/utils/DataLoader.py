@@ -85,14 +85,33 @@ class DataLoader(object):
 
 
     def get_random_train_batch(self, batch_size):
+        #TODO(dima): process case when batch_size > len(data)
         start_index = random.randint(
             0,
             len(self.datas_train) - batch_size - 1
         )
 
+        end_index = start_index + batch_size
+
         return Variable(torch.LongTensor(self.datas_to_matrix(
-            self.datas_train[start_index:(start_index + batch_size)]
+            self.datas_train[start_index:end_index]
         ))).to(device)
+
+
+    def get_validation_batch_iterator(self, batch_size):
+        start_index = 0
+
+        while start_index < len(self.datas_validation):
+            end_index = min(
+                start_index + batch_size,
+                len(self.datas_validation)
+            )
+
+            yield Variable(torch.LongTensor(self.datas_to_matrix(
+                self.datas_validation[start_index:end_index]
+            ))).to(device)
+
+            start_index = end_index
 
 
     def get_vocab_size(self):
