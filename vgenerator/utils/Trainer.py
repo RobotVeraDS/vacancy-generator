@@ -74,7 +74,7 @@ class Trainer(object):
                     "lr: %.2E" % optimizer.get_lr(),
                     "seconds:", epoch_seconds,
                     "train loss:", epoch_loss,
-                    "valid lsos:", validation_loss
+                    "valid loss:", validation_loss
                 )
 
             if ind_epoch % check_every == 0:

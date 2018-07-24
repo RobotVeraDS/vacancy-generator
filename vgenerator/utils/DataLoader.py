@@ -13,7 +13,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 class DataLoader(object):
-    MIN_COUNT_TO_CONSIDER = 12
+    MAX_VOCAB_SIZE = 50000
 
     def __init__(self, path, tokens=None):
         self.path = path
@@ -50,9 +50,10 @@ class DataLoader(object):
         np.random.shuffle(self.datas_train)
 
         print("Tokens calculation...")
-        for token in tqdm.tqdm(tokens_count):
-            if tokens_count[token] >= DataLoader.MIN_COUNT_TO_CONSIDER:
-                self.tokens.append(token)
+        self.tokens = [pair[0] for pair in sorted(
+            tokens_count.items(),
+            key=lambda x: -x[1]
+        )[:DataLoader.MAX_VOCAB_SIZE]]
 
         self.tokens += ["_PAD_", "_EOS_", "_UNK_"]
 
