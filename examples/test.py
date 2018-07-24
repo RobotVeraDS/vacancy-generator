@@ -1,9 +1,9 @@
 from vgenerator.models import Generator
 from vgenerator.utils import DataLoader
 from vgenerator.utils import Trainer
+from vgenerator.optimizer import Optimizer
 
 import torch
-
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 torch.cuda.set_device(1)
@@ -53,19 +53,21 @@ model = Generator(
     num_layers
 ).to(device)
 
-optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+optim = torch.optim.Adam(model.parameters(), lr=lr)
 scheduler = ReduceLROnPlateau(
-    optimizer,
+    optim,
     mode="min",
     factor=0.1,
     patience=10
 )
 
+optimizer = Optimizer(optim, scheduler)
+
 trainer = Trainer()
 
 print("Start training")
 
-trainer.train(model, scheduler, data_loader,
+trainer.train(model, optimizer, data_loader,
               batch_size, num_epochs, batches_per_epoch,
               save_every, print_every, check_every,
               seeds)

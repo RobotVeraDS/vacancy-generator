@@ -36,7 +36,11 @@ class Trainer(object):
                 epoch_losses.append(loss.item())
 
                 loss.backward()
-                optimizer.step(loss.item())
+
+                optimizer.step()
+
+            epoch_loss = np.mean(epoch_losses)
+            optimizer.update(epoch_loss)
 
             if ind_epoch % save_every == 0:
                 self.save_checkpoint(ind_epoch, data_loader, model, optimizer)
@@ -49,7 +53,7 @@ class Trainer(object):
                 print(
                     "Epoch", ind_epoch + 1,
                     "seconds:", epoch_seconds,
-                     "loss:", np.mean(epoch_losses)
+                     "loss:", epoch_loss
                 )
 
             if ind_epoch % check_every == 0:
