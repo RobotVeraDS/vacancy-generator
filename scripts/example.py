@@ -25,9 +25,13 @@ save_every = 20
 print_every = 1
 check_every = 20
 
-network_type = "word"
+network_type = "char"
 
-seeds = [x.split() for x in [
+# job
+
+data_loader = DataLoader("data/sample", type=network_type)
+
+seeds = [data_loader._get_tokens(x) for x in [
     "Менеджер по туризму",
     "Электромеханик по технической поддержке лкс",
     "Юрисконсульт обязанности : работа с договорами",
@@ -42,9 +46,6 @@ seeds = [x.split() for x in [
     "Врач узи"
 ]]
 
-# job
-
-data_loader = DataLoader("data/sample", type=network_type)
 
 print("Number of unique tokens:", data_loader.get_vocab_size())
 
