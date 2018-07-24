@@ -15,8 +15,9 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class DataLoader(object):
     MAX_VOCAB_SIZE = 50000
 
-    def __init__(self, path, tokens=None):
+    def __init__(self, path, tokens=None, type="word"):
         self.path = path
+        self.type = type
 
         self.datas_train = []
         self.datas_validation = []
@@ -33,6 +34,16 @@ class DataLoader(object):
         ))
 
 
+    def _get_tokens(self, line):
+        """ Word or char based network
+        """
+
+        if self.type == "word":
+            return line.split()
+        else:
+            return list(line)
+
+
     def _load_train_vocab(self):
         self.tokens = []
 
@@ -41,7 +52,7 @@ class DataLoader(object):
         with open("{}/train/data.txt".format(self.path), "r") as file:
             print("Load train data...")
             for line in tqdm.tqdm(file):
-                tokens = line.split()
+                tokens = self._get_tokens(line)
                 self.datas_train.append(tokens)
 
                 for token in tokens:
@@ -62,7 +73,7 @@ class DataLoader(object):
         with open("{}/validation/data.txt".format(self.path), "r") as file:
             print("Load validation data...")
             for line in tqdm.tqdm(file):
-                tokens = line.split()
+                tokens = self._get_tokens(line)
                 self.datas_validation.append(tokens)
 
 

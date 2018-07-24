@@ -124,4 +124,6 @@ class Trainer(object):
 
             x = torch.cat([x, next_ind], dim=1)
 
-        return " ".join([data_loader.tokens[ix] for ix in x.cpu().data.numpy()[0]])
+        sep = " " if data_loader.type == "word" else ""
+
+        return sep.join([data_loader.tokens[ix] for ix in x.cpu().data.numpy()[0]])
