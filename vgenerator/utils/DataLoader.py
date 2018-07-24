@@ -19,10 +19,11 @@ class DataLoader(object):
         self.path = path
 
         self.datas_train = []
-        self.datas_test = []
+        self.datas_validation = []
 
         if tokens is None:
             self._load_train_vocab()
+            self._load_validation()
         else:
             self.tokens = tokens
 
@@ -38,7 +39,7 @@ class DataLoader(object):
         tokens_count = defaultdict(int)
 
         with open("{}/train/data.txt".format(self.path), "r") as file:
-            print("Train data loading...")
+            print("Load train data...")
             for line in tqdm.tqdm(file):
                 tokens = line.split()
                 self.datas_train.append(tokens)
@@ -54,6 +55,14 @@ class DataLoader(object):
                 self.tokens.append(token)
 
         self.tokens += ["_PAD_", "_EOS_", "_UNK_"]
+
+
+    def _load_validation(self):
+        with open("{}/validation/data.txt".format(self.path), "r") as file:
+            print("Load validation data...")
+            for line in tqdm.tqdm(file):
+                tokens = line.split()
+                self.datas_validation.append(tokens)
 
 
     def _get_token_id(self, token):

@@ -14,7 +14,6 @@ class Trainer(object):
     def __init__(self):
         pass
 
-
     def train(self, model, optimizer, data_loader, batch_size, num_epochs,
               batches_per_epoch, save_every, print_every, check_every, seeds,
               test_max_len=50, test_temperature=1.0):
@@ -37,7 +36,7 @@ class Trainer(object):
                 epoch_losses.append(loss.item())
 
                 loss.backward()
-                optimizer.step()
+                optimizer.step(loss.item())
 
             if ind_epoch % save_every == 0:
                 self.save_checkpoint(ind_epoch, data_loader, model, optimizer)
@@ -74,7 +73,6 @@ class Trainer(object):
             {
                 "epoch": ind_epoch + 1,
                 "state_dict": model.state_dict(),
-                "optimizer" : optimizer.state_dict(),
 		"tokens": data_loader.tokens
             },
             "checkpoints/{}.pth.tar".format(file_pattern)

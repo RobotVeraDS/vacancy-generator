@@ -4,6 +4,8 @@ from vgenerator.utils import Trainer
 
 import torch
 
+from torch.optim.lr_scheduler import ReduceLROnPlateau
+
 torch.cuda.set_device(1)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -24,18 +26,18 @@ print_every = 1
 check_every = 1
 
 seeds = [x.split() for x in [
-    "менеджер по туризму",
-    "электромеханик по технической поддержке лкс",
-    "юрисконсульт обязанности : работа с договорами",
-    "руководитель отдела продаж",
-    "менеджер по закупкам    должностные обязанности : анализ продаж",
-    "менеджер отдела по работе с партнерами",
-    "директор филиала",
-    "руководитель проекта отдел строительства",
-    "ученый исследователь",
-    "автослесарь",
-    "медицинский представитель",
-    "врач узи"
+    "Менеджер по туризму",
+    "Электромеханик по технической поддержке лкс",
+    "Юрисконсульт обязанности : работа с договорами",
+    "Руководитель отдела продаж",
+    "Менеджер по закупкам    должностные обязанности : анализ продаж",
+    "Менеджер отдела по работе с партнерами",
+    "Директор филиала",
+    "Руководитель проекта отдел строительства",
+    "Ученый исследователь",
+    "Автослесарь",
+    "Медицинский представитель",
+    "Врач узи"
 ]]
 
 # job
@@ -52,12 +54,18 @@ model = Generator(
 ).to(device)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+scheduler = ReduceLROnPlateau(
+    optimizer,
+    mode="min",
+    factor=0.1,
+    patience=10
+)
 
 trainer = Trainer()
 
 print("Start training")
 
-trainer.train(model, optimizer, data_loader,
+trainer.train(model, scheduler, data_loader,
               batch_size, num_epochs, batches_per_epoch,
               save_every, print_every, check_every,
               seeds)
