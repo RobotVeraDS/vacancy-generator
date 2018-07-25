@@ -6,7 +6,7 @@ from vgenerator.optimizer import Optimizer
 import torch
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
-torch.cuda.set_device(1)
+torch.cuda.set_device(0)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # params

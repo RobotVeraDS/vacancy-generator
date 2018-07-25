@@ -34,7 +34,6 @@ class DataLoader(object):
             range(len(self.tokens))
         ))
 
-
     def _get_tokens(self, line):
         """ Word or char based network
         """
@@ -43,7 +42,6 @@ class DataLoader(object):
             return line.split()
         else:
             return list(line)
-
 
     def _load_train_vocab(self):
         self.tokens = []
@@ -72,9 +70,7 @@ class DataLoader(object):
 
             self.tokens.append(pair[0])
 
-
         self.tokens += ["_PAD_", "_EOS_", "_UNK_"]
-
 
     def _load_validation(self):
         with open("{}/validation/data.txt".format(self.path), "r") as file:
@@ -83,13 +79,11 @@ class DataLoader(object):
                 tokens = self._get_tokens(line)
                 self.datas_validation.append(tokens)
 
-
     def _get_token_id(self, token):
         if token in self.token_to_id:
             return self.token_to_id[token]
 
         return self.token_to_id["_UNK_"]
-
 
     def datas_to_matrix(self, datas, max_len=None):
         max_len = max_len or max(map(len, datas))
@@ -98,13 +92,12 @@ class DataLoader(object):
 
         for irow in range(len(datas)):
             for itoken, token in enumerate(datas[irow]):
-                mtx[irow, itoken]  = self._get_token_id(token)
+                mtx[irow, itoken] = self._get_token_id(token)
 
         return mtx
 
-
     def get_random_train_batch(self, batch_size):
-        #TODO(dima): process case when batch_size > len(data)
+        # TODO(dima): process case when batch_size > len(data)
         start_index = random.randint(
             0,
             len(self.datas_train) - batch_size - 1
@@ -115,7 +108,6 @@ class DataLoader(object):
         return Variable(torch.LongTensor(self.datas_to_matrix(
             self.datas_train[start_index:end_index]
         ))).to(device)
-
 
     def get_validation_batch_iterator(self, batch_size):
         start_index = 0
@@ -131,7 +123,6 @@ class DataLoader(object):
             ))).to(device)
 
             start_index = end_index
-
 
     def get_vocab_size(self):
         return len(self.tokens)

@@ -1,5 +1,6 @@
 import torch
 
+
 class Optimizer(object):
     def __init__(self, optim, scheduler):
         self.optim = optim
@@ -19,7 +20,7 @@ class Optimizer(object):
             self.scheduler.step()
 
     def get_lr(self):
-        #TODO(dima): is it elegant way?
+        # TODO(dima): is it elegant way?
         for param_group in self.optim.param_groups:
             return param_group['lr']
 

@@ -18,7 +18,6 @@ class Generator(nn.Module):
 
         self.out = nn.Linear(hidden_size, num_tokens)
 
-
     def forward(self, input, hidden=None):
         output, hidden = self.rnn(self.embedding(input), hidden)
         output = self.out(output)
