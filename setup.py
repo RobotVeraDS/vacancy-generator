@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 from os import path
 
 here = path.abspath(path.dirname(__file__))
@@ -13,18 +13,16 @@ setup(
     description='Vacancy generator',
     long_description=long_description,
     long_description_content_type='text/markdown',
+    license='Apache License 2.0',
     url='https://github.com/RobotVeraDS/vacancy-generator',
     author='Robot Vera',
     author_email='ischenko.dmitry@gmail.com',
 
     classifiers=[
         'Development Status :: 3 - Alpha',
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3',
     ],
 
     keywords='vacancy nlp rnn lstm generation',
-    packages=find_packages(exclude=['contrib', 'docs', 'tests']),
-
     install_requires=['torch', 'numpy', 'tqdm'],
 )
