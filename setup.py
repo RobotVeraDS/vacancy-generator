@@ -23,6 +23,13 @@ setup(
         'Programming Language :: Python :: 3',
     ],
 
+    packages=[
+        "vgenerator",
+        "vgenerator.models",
+        "vgenerator.utils",
+        "vgenerator.optimizer",
+    ],
+
     keywords='vacancy nlp rnn lstm generation',
     install_requires=['torch', 'numpy', 'tqdm'],
 )
