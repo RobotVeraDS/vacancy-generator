@@ -1,4 +1,3 @@
-import sys
 import numpy as np
 from collections import defaultdict
 import random
@@ -9,15 +8,13 @@ from torch.autograd import Variable
 import tqdm
 
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-
 class DataLoader(object):
     MAX_VOCAB_SIZE = 50000
     MIN_TOKEN_COUNT = 3
 
-    def __init__(self, path, tokens=None, type="word"):
+    def __init__(self, path, device, tokens=None, type="word"):
         self.path = path
+        self.device = device
         self.type = type
 
         self.datas_train = []
@@ -107,7 +104,7 @@ class DataLoader(object):
 
         return Variable(torch.LongTensor(self.datas_to_matrix(
             self.datas_train[start_index:end_index]
-        ))).to(device)
+        ))).to(self.device)
 
     def get_validation_batch_iterator(self, batch_size):
         start_index = 0
@@ -120,7 +117,7 @@ class DataLoader(object):
 
             yield Variable(torch.LongTensor(self.datas_to_matrix(
                 self.datas_validation[start_index:end_index]
-            ))).to(device)
+            ))).to(self.device)
 
             start_index = end_index
 

@@ -8,6 +8,7 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 torch.cuda.set_device(0)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# device = torch.device("cpu")
 
 # params
 
@@ -25,11 +26,12 @@ save_every = 20
 print_every = 1
 check_every = 20
 
-network_type = "char"
+
+network_type = "word"
 
 # job
 
-data_loader = DataLoader("data/sample", type=network_type)
+data_loader = DataLoader("data/sample", device, type=network_type)
 
 seeds = [data_loader._get_tokens(x) for x in [
     "Менеджер по туризму",
@@ -66,7 +68,7 @@ scheduler = ReduceLROnPlateau(
 
 optimizer = Optimizer(optim, scheduler)
 
-trainer = Trainer()
+trainer = Trainer(device)
 
 print("Start training")
 

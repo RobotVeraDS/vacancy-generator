@@ -7,12 +7,9 @@ import torch
 from torch.autograd import Variable
 
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-
 class Trainer(object):
-    def __init__(self):
-        pass
+    def __init__(self, device):
+        self.device = device
 
     def calc_validation_loss(self, model, data_loader, batch_size):
         batches = data_loader.get_validation_batch_iterator(batch_size)
@@ -101,7 +98,7 @@ class Trainer(object):
     def generate_sample(self, model, data_loader,
                         seed, max_length, temperature):
         mtx = data_loader.datas_to_matrix([seed])
-        x, hidden = Variable(torch.LongTensor(mtx)).to(device), None
+        x, hidden = Variable(torch.LongTensor(mtx)).to(self.device), None
 
         # path through model all data except last word
         if len(x[0]) > 1:
@@ -117,7 +114,7 @@ class Trainer(object):
             ).cpu().data.numpy()[0]
 
             next_ind = np.random.choice(data_loader.get_vocab_size(), p=p_next)
-            next_ind = Variable(torch.LongTensor([[next_ind]])).to(device)
+            next_ind = Variable(torch.LongTensor([[next_ind]])).to(self.device)
 
             x = torch.cat([x, next_ind], dim=1)
 
