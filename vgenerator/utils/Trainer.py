@@ -2,14 +2,16 @@ import torch.nn.functional as F
 import numpy as np
 import datetime
 import re
+import os
 
 import torch
 from torch.autograd import Variable
 
 
 class Trainer(object):
-    def __init__(self, device):
+    def __init__(self, device, project=None):
         self.device = device
+        self.project = project
 
     def calc_validation_loss(self, model, data_loader, batch_size):
         batches = data_loader.get_validation_batch_iterator(batch_size)
@@ -76,7 +78,12 @@ class Trainer(object):
                 for seed in seeds:
                     out = self.generate_sample(model, data_loader, seed,
                                                test_max_len, test_temperature)
-                    print(re.sub("_PAD_", "", out).strip())
+
+                    out = re.sub("_PAD_", "", out).strip()
+                    out = re.sub("_SEP_", " # " * 10, out)
+
+                    print(out)
+                    print()
 
                 print()
 
@@ -86,13 +93,17 @@ class Trainer(object):
             "_",
             str(datetime.datetime.now())[:19]
         )
-
+        if self.project:
+            checkpoint_path = "checkpoints/{}{}.pth.tar".format(self.project, file_pattern)
+        else:
+            checkpoint_path = "checkpoints/{}.pth.tar".format(file_pattern)
+        os.makedirs(os.path.dirname(checkpoint_path), exist_ok=True)
         torch.save({
             "epoch": ind_epoch + 1,
             "state_dict": model.state_dict(),
             "tokens": data_loader.tokens
         },
-            "checkpoints/{}.pth.tar".format(file_pattern)
+            checkpoint_path
         )
 
     def generate_sample(self, model, data_loader,

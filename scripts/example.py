@@ -12,6 +12,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # params
 
+PROJECT_PATH = 'usa/'
+
 embedding_size = 24
 hidden_size = 24
 num_layers = 1
@@ -22,7 +24,7 @@ batch_size = 10
 batches_per_epoch = 10
 num_epochs = 100
 
-save_every = 20
+save_every = 2
 print_every = 1
 check_every = 20
 
@@ -68,7 +70,7 @@ scheduler = ReduceLROnPlateau(
 
 optimizer = Optimizer(optim, scheduler)
 
-trainer = Trainer(device)
+trainer = Trainer(device, PROJECT_PATH)
 
 print("Start training")
 
