@@ -1,4 +1,5 @@
 *
 !.gitignore
 !example.py
+!predictor.py
 !README
