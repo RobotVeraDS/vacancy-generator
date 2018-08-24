@@ -2,4 +2,5 @@
 !.gitignore
 !example.py
 !predictor.py
+!title2vacancy.py
 !README

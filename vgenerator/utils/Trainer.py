@@ -106,6 +106,7 @@ class Trainer(object):
             checkpoint_path
         )
 
+
     def generate_sample(self, model, data_loader,
                         seed, max_length, temperature):
         mtx = data_loader.datas_to_matrix([seed])

@@ -5,7 +5,7 @@ from vgenerator.utils import DataProcessor
 import argparse
 import torch
 
-torch.cuda.set_device(0)
+#torch.cuda.set_device(0)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 embedding_size = 256
@@ -27,7 +27,9 @@ def main():
                         default=128)
     args = parser.parse_args()
 
-    checkpoint = torch.load(args.path)
+    checkpoint = torch.load(args.path,
+                            map_location= device)
+
     tokens = checkpoint['tokens']
     data_processor = DataProcessor(tokens)
 
@@ -47,7 +49,7 @@ def main():
 
     predictor = Predictor(device, type_)
     result = predictor(model, data_processor, args.seed,
-                           args.maxlength, args.temperature)
+                       args.maxlength, args.temperature)
     print(result)
 
 if __name__ == '__main__':

@@ -32,5 +32,5 @@ class Predictor(object):
 
         sep = " " if self.type_ == "word" else ""
         out = sep.join([data_processor.tokens[ix] for ix in x.cpu().data.numpy()[0]])
-        #out = re.sub("_PAD_", "", out).strip()
+        out = re.sub("_PAD_", "", out).strip()
         return out
